@@ -1,0 +1,29 @@
+object GPL: TGPL
+  Left = 258
+  Top = 234
+  ActiveControl = mGPL
+  AutoScroll = False
+  BorderStyle = fbsSingle
+  Caption = 'GNU General Public License'
+  ClientHeight = 359
+  ClientWidth = 469
+  Color = clBackground
+  Constraints.MaxHeight = 359
+  Constraints.MaxWidth = 469
+  Constraints.MinHeight = 359
+  Constraints.MinWidth = 469
+  FormStyle = fsStayOnTop
+  Position = poMainFormCenter
+  Scaled = False
+  PixelsPerInch = 81
+  object mGPL: TMemo
+    Left = 0
+    Top = 0
+    Width = 469
+    Height = 359
+    Align = alClient
+    ReadOnly = True
+    ScrollBars = ssAutoBoth
+    TabOrder = 0
+  end
+end

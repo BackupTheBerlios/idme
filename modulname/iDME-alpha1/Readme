@@ -1,0 +1,27 @@
+
+iDME - iDesk Menu Editor
+Alpha 0.1
+
+Written by Andre Hauke
+GFX by Stefan Schmidt
+
+
+Installation:
+First you need the kylixlibs from http://kylixlibs.sourceforge.net. Download and install the libs for your system.
+Now you should start the program by clicking on iDME in the "bin" directory.
+Maybe you have to call it from the shell:
+
+  ./iDME
+
+If you have any Problems please contact us
+
+Note:
+This is the first alpha!
+
+
+Web:
+http://idme.berlios.de
+
+eMail:
+cfa2k@users.berlios.de
+nox@users.berlios.de

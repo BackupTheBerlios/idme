@@ -939,7 +939,7 @@ if(lsKDEIcons.SelCount>0) and (MessageDlg('Sollen die Ausgewählten Links konvert
 	begin
 		// Konvertierung Starten
     StatusBar.Position:=0;
-    StatusBar.Max:=lsKDEIcons.Items.Count;
+    StatusBar.Max:=lsKDEIcons.SelCount;
     for i:=0 to lsKDEIcons.Items.Count -1 do
     	begin
       	if lsKDEIcons.Selected[i] = true then
@@ -985,6 +985,12 @@ Reset(TempFile);
         if lowercase(Functions.Left(Line,5)) = 'icon=' then // Wenn vorhanden
            begin
            	rKde.Icon:=Functions.Mid(Line,pos('=',Line)+1,strlen(pchar(Line))-pos('=',Line));
+           end;
+        // X-KDE-Username (Falls Root)
+        if lowercase(Functions.Left(Line,15)) = 'x-kde-username=' then // Wenn vorhanden
+           begin
+           	if lowercase(Functions.Mid(Line,pos('=',Line)+1,strlen(pchar(Line))-pos('=',Line))) = 'root' then
+           		rKde.Command:='kdesu ' + rKde.Command;
            end;
 			end;
   Finally

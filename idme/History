@@ -1,7 +1,7 @@
 iDME - iDesk Menu Editor
 http://idme.berlios.de
 
-Coded by Andre Hauke(cfa2k@users.berlios.de)
+Coded by Andre Hauke (cfa2k@users.berlios.de)
 GFX by Stefan Schmidt (nox@users.berlios.de)
 
 
@@ -9,6 +9,12 @@ GFX by Stefan Schmidt (nox@users.berlios.de)
 
 alpha 0.2
 ------------
+
+11.02.2004:
+ - added iDesk config menu
+
+09.02.2004:
+ - fixed KDE link convertion bug
 
 08.02.2004:
  - finished KDE link convertion routine

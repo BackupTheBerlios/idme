@@ -103,9 +103,25 @@ type
     MarkierungUmkehren1: TMenuItem;
     TabSheet6: TTabSheet;
     lblFont: TLabel;
+    lblFontSize: TLabel;
+    lblFontColor: TLabel;
+    dlgColor: TColorDialog;
+    lblTrans: TLabel;
+    chkIconPos: TCheckBox;
+    chkShadow: TCheckBox;
+    chkBold: TCheckBox;
+    chkIconSnap: TCheckBox;
+    chkCaptionOnHover: TCheckBox;
     cboFont: TComboBox;
-    dlgFont: TFontDialog;
-    Button1: TButton;
+    txtFontColor: TEdit;
+    txtTrans: TEdit;
+    cmDotColor: TButton;
+    shColor: TShape;
+    scTrans: TScrollBar;
+    lblClickSpeed: TLabel;
+    txtClickSpeed: TEdit;
+    scClickSpeed: TScrollBar;
+    txtFontSize: TEdit;
     procedure cmdAddClick(Sender: TObject);
     procedure cmdDirClick(Sender: TObject);
     procedure cmdCreateClick(Sender: TObject);
@@ -136,6 +152,10 @@ type
     procedure cmdConvertStartClick(Sender: TObject);
     procedure AlleMakieren1Click(Sender: TObject);
     procedure MarkierungUmkehren1Click(Sender: TObject);
+    procedure cmdDot2Click(Sender: TObject);
+    procedure cmDotColorClick(Sender: TObject);
+    procedure scClickSpeedChange(Sender: TObject);
+    procedure scTransChange(Sender: TObject);
   private
     procedure GetLnk(list: tlistbox;const Directory: string;
 		const FileMask: string = '*.*');
@@ -1047,6 +1067,38 @@ for i:=0 to lsKDEIcons.Items.Count -1 do
     else
     	lsKDEIcons.Selected[i]:=true;
 	end;
+end;
+
+procedure TMain.cmdDot2Click(Sender: TObject);
+begin
+dlgColor.Execute;
+end;
+
+procedure TMain.cmDotColorClick(Sender: TObject);
+var
+	sTemp: String;
+begin
+if dlgColor.Execute then
+	begin
+		// Auswahl Übernehmen
+    // TColor nach Html Farben konvertieren
+		sTemp:=IntToHex(ColorToRgb(dlgColor.Color),6);
+  	sTemp:=Copy(sTemp,5,2) + Copy(sTemp,3,2) + Copy(sTemp,1,2);
+  	txtFontColor.Text:=Format('#%s', [sTemp]);
+    shColor.Color:=dlgColor.Color;
+	end;
+end;
+
+procedure TMain.scClickSpeedChange(Sender: TObject);
+begin
+// Bei Änderung Wert Übernehmen
+txtClickSpeed.Text:=inttostr(scClickSpeed.Position);
+end;
+
+procedure TMain.scTransChange(Sender: TObject);
+begin
+// Bei Änderung Übernehmen
+txtTrans.Text:=inttostr(scTrans.Position);
 end;
 
 end.

@@ -591,25 +591,34 @@ object Main: TMain
         Left = 8
         Top = 8
         Width = 377
-        Height = 161
+        Height = 185
         Caption = 'KDE Desktop Icons Konvertieren:'
         TabOrder = 0
+        object StatusBar: TProgressBar
+          Left = 8
+          Top = 128
+          Width = 361
+          Height = 17
+          Transparent = True
+        end
         object lsKDEIcons: TListBox
           Left = 8
           Top = 18
           Width = 361
           Height = 103
           MultiSelect = True
+          PopupMenu = ConvertPopup
           Sorted = True
           TabOrder = 0
         end
         object cmdConvertStart: TButton
           Left = 8
-          Top = 128
+          Top = 152
           Width = 97
           Height = 25
           Caption = 'Start'
           TabOrder = 1
+          OnClick = cmdConvertStartClick
         end
       end
     end
@@ -2445,5 +2454,17 @@ object Main: TMain
     OnTimer = tmrInputCheck2Timer
     Left = 320
     Top = 336
+  end
+  object ConvertPopup: TPopupMenu
+    Left = 384
+    Top = 304
+    object AlleMakieren1: TMenuItem
+      Caption = 'Alle Markieren'
+      OnClick = AlleMakieren1Click
+    end
+    object MarkierungUmkehren1: TMenuItem
+      Caption = 'Markierung Umkehren'
+      OnClick = MarkierungUmkehren1Click
+    end
   end
 end

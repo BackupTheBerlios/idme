@@ -96,6 +96,10 @@ type
     fraConvertKDE: TGroupBox;
     lsKDEIcons: TListBox;
     cmdConvertStart: TButton;
+    StatusBar: TProgressBar;
+    ConvertPopup: TPopupMenu;
+    AlleMakieren1: TMenuItem;
+    MarkierungUmkehren1: TMenuItem;
     procedure cmdAddClick(Sender: TObject);
     procedure cmdDirClick(Sender: TObject);
     procedure cmdCreateClick(Sender: TObject);
@@ -123,12 +127,16 @@ type
     procedure chkSDirClick(Sender: TObject);
     procedure lblGPLMouseEnter(Sender: TObject);
     procedure lblGPLMouseLeave(Sender: TObject);
+    procedure cmdConvertStartClick(Sender: TObject);
+    procedure AlleMakieren1Click(Sender: TObject);
+    procedure MarkierungUmkehren1Click(Sender: TObject);
   private
     procedure GetLnk(list: tlistbox;const Directory: string;
 		const FileMask: string = '*.*');
     procedure SetCap();
     procedure CleanAdd();
     procedure CleanEdit();
+    procedure ConvertKDELink(Link: String);
   public
     { Public-Deklarationen }
   end;
@@ -148,6 +156,7 @@ var
   Main: TMain;
   Version: String;
   Meldung: MSG;
+  HomeDir: String;
 
 implementation
 
@@ -194,7 +203,7 @@ var
   sFile: String;
 begin
 // Icon Auswahl Anzeigen
-OpenIcon.InitialDir:=sysutils.GetEnvironmentVariable('HOME'); // Home Verzeichnis
+OpenIcon.InitialDir:=HomeDir; // Home Verzeichnis
 
 if (OpenIcon.Execute = true) and (OpenIcon.FileName <> '') then
 	txtIcon.Text:=OpenIcon.FileName;
@@ -229,7 +238,7 @@ var
   SVG: String;
 begin
 // iDesk Verzeichnis
-iDeskDir:=sysutils.GetEnvironmentVariable('HOME')+'/.idesktop';
+iDeskDir:=HomeDir+'/.idesktop';
 
 // SVG
 if(chkSVG.Checked=true) then // Wenn ausgewählt
@@ -295,7 +304,7 @@ if(TabSheet2.Visible=true) then // Wenn editieren
   	// Alte Einträge Löschen
     lsLnks.Clear;
   	// Vorhandene Verknüpfungen Auslesen
-  	LnkDir:=sysutils.GetEnvironmentVariable('HOME')+'/.idesktop';
+  	LnkDir:=HomeDir+'/.idesktop';
   	GetLnk(lsLnks,LnkDir,'*.lnk');
 	end;
 
@@ -310,7 +319,7 @@ if(TabSheet5.Visible=true) then // Wenn editieren
   	// Alte Einträge Löschen
     lsKDEIcons.Clear;
   	// Vorhandene KDE Verknüpfungen Auslesen
-  	LnkDir:=sysutils.GetEnvironmentVariable('HOME')+'/Desktop';
+  	LnkDir:=HomeDir+'/Desktop';
   	GetLnk(lsKDEIcons,LnkDir,'*.desktop');
 	end;
 
@@ -359,7 +368,7 @@ var
   i: Integer;
 begin
 // Ausgewählte Datei Laden
-iDeskLnk:=sysutils.GetEnvironmentVariable('HOME')+'/.idesktop/'+lsLnks.Items.Strings[lsLnks.ItemIndex];
+iDeskLnk:=HomeDir+'/.idesktop/'+lsLnks.Items.Strings[lsLnks.ItemIndex];
 
 // Alte Daten Löschen
 txtTitle.Text:='';
@@ -434,7 +443,7 @@ begin
 // Nachfragen
 if(MessageDlg('',Meldung.MSG3,mtconfirmation,[mbYes,mbNo],0)=mrYes) then
   // Link Verzeichnis
-  LnkDir:=sysutils.GetEnvironmentVariable('HOME') + '/.idesktop';
+  LnkDir:=HomeDir+'/.idesktop';
 	// Welcher Eintrag
   Index:=lsLnks.ItemIndex;
   // Löschen
@@ -525,6 +534,9 @@ procedure TMain.FormCreate(Sender: TObject);
 var
 	sStart: String;
 begin
+// HomeDir Auslesen
+HomeDir:=sysutils.GetEnvironmentVariable('HOME');
+
 // Parameter Auswerten
 if ParamCount>0 then begin
 	// Standard Text
@@ -678,10 +690,10 @@ var
 begin
 // Nachfragen
 if(MessageDlg('',Meldung.MSG3,mtConfirmation,[mbYes,mbNo],0)=mrYes) then
-  LnkDir:=sysutils.GetEnvironmentVariable('HOME') + '/.idesktop';
+  LnkDir:=HomeDir+'/.idesktop';
 	// Alte Datei Löschen
   // Link Verzeichnis
-  LnkDir:=sysutils.GetEnvironmentVariable('HOME') + '/.idesktop';
+  LnkDir:=HomeDir+'/.idesktop';
 	// Welcher Eintrag
   Index:=lsLnks.ItemIndex;
 
@@ -765,7 +777,7 @@ var
   sFile: String;
 begin
 // Icon Auswahl Anzeigen
-OpenIcon.InitialDir:=sysutils.GetEnvironmentVariable('HOME'); // Home Verzeichnis
+OpenIcon.InitialDir:=HomeDir; // Home Verzeichnis
 
 if OpenIcon.Execute then
 	txtIconE.Text:=OpenIcon.FileName;
@@ -901,6 +913,53 @@ end;
 procedure TMain.lblGPLMouseLeave(Sender: TObject);
 begin
 lblGPL.Font.Color:=clBlack;
+end;
+
+procedure TMain.cmdConvertStartClick(Sender: TObject);
+var
+	i: Integer;
+begin
+// Nachfragen
+if(lsKDEIcons.SelCount>0) and (MessageDlg('Sollen die Ausgewählten Links konvertiert werden?',mtConfirmation,[mbYes,mbNo],0) = mrYes) then
+	begin
+		// Konvertierung Starten
+    for i:=0 to lsKDEIcons.SelCount -1 do
+    	begin
+      	StatusBar.Caption:='Konvertiere ' + lsKDEIcons.Items.Strings[i];
+      	ConvertKDELink(lsKDEIcons.Items.Strings[i]);
+        Application.ProcessMessages;
+      end;
+  end;
+end;
+
+procedure TMain.ConvertKDELink(Link: String);
+begin
+// Konvertieren
+end;
+
+// Alle Markieren
+procedure TMain.AlleMakieren1Click(Sender: TObject);
+var
+	i: Integer;
+begin
+for i:=0 to lsKDEIcons.Items.Count -1 do
+	begin
+		lsKDEIcons.Selected[i]:=true;
+	end;
+end;
+
+// Markierung Umkehren
+procedure TMain.MarkierungUmkehren1Click(Sender: TObject);
+var
+	i: Integer;
+begin
+for i:=0 to lsKDEIcons.Items.Count -1 do
+	begin
+  	if lsKDEIcons.Selected[i]=true then
+			lsKDEIcons.Selected[i]:=false
+    else
+    	lsKDEIcons.Selected[i]:=true;
+	end;
 end;
 
 end.

@@ -223,3 +223,14 @@ msgstr ""
 msgid "Couldn`t save changes!"
 msgstr ""
 
+#. Extras
+msgid "Extras"
+msgstr ""
+
+#. KDE Desktop Verknüpfungen Konvertieren
+msgid "Convert KDE Desktop links"
+msgstr ""
+
+#. Start
+msgid "Start"
+msgstr ""

@@ -587,26 +587,28 @@ object Main: TMain
     object TabSheet5: TTabSheet
       Caption = 'Extras'
       ImageIndex = 4
-      object GroupBox1: TGroupBox
+      object fraConvertKDE: TGroupBox
         Left = 8
         Top = 8
         Width = 377
         Height = 161
         Caption = 'KDE Desktop Icons Konvertieren:'
         TabOrder = 0
-        object ListBox1: TListBox
+        object lsKDEIcons: TListBox
           Left = 8
           Top = 18
-          Width = 233
+          Width = 361
           Height = 103
+          MultiSelect = True
+          Sorted = True
           TabOrder = 0
         end
-        object Button1: TButton
+        object cmdConvertStart: TButton
           Left = 8
           Top = 128
-          Width = 89
+          Width = 97
           Height = 25
-          Caption = 'Button1'
+          Caption = 'Start'
           TabOrder = 1
         end
       end

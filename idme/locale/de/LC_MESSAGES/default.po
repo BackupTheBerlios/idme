@@ -223,3 +223,14 @@ msgstr "VerkÃ¼pfung wurde gelÃ¶scht"
 msgid "Couldn`t save changes!"
 msgstr "Konnte Ã„nderungen nicht Speichern!"
 
+#. Extras
+msgid "Extras"
+msgstr "Extras"
+
+#. KDE Desktop Verknüpfungen Konvertieren
+msgid "Convert KDE Desktop links"
+msgstr "KDE Desktop Verknüpfungen Konvertieren"
+
+#. Start
+msgid "Start"
+msgstr "Start"

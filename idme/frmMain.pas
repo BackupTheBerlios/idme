@@ -93,9 +93,9 @@ type
     tmrInputCheck: TTimer;
     tmrInputCheck2: TTimer;
     TabSheet5: TTabSheet;
-    GroupBox1: TGroupBox;
-    ListBox1: TListBox;
-    Button1: TButton;
+    fraConvertKDE: TGroupBox;
+    lsKDEIcons: TListBox;
+    cmdConvertStart: TButton;
     procedure cmdAddClick(Sender: TObject);
     procedure cmdDirClick(Sender: TObject);
     procedure cmdCreateClick(Sender: TObject);
@@ -124,7 +124,7 @@ type
     procedure lblGPLMouseEnter(Sender: TObject);
     procedure lblGPLMouseLeave(Sender: TObject);
   private
-    procedure GetLnk(const Directory: string;
+    procedure GetLnk(list: tlistbox;const Directory: string;
 		const FileMask: string = '*.*');
     procedure SetCap();
     procedure CleanAdd();
@@ -196,7 +196,7 @@ begin
 // Icon Auswahl Anzeigen
 OpenIcon.InitialDir:=sysutils.GetEnvironmentVariable('HOME'); // Home Verzeichnis
 
-if OpenIcon.Execute then
+if (OpenIcon.Execute = true) and (OpenIcon.FileName <> '') then
 	txtIcon.Text:=OpenIcon.FileName;
 
   if(pos('png',lowercase(OpenIcon.FileName))<>0) then // Wenn PNG
@@ -296,7 +296,7 @@ if(TabSheet2.Visible=true) then // Wenn editieren
     lsLnks.Clear;
   	// Vorhandene Verknüpfungen Auslesen
   	LnkDir:=sysutils.GetEnvironmentVariable('HOME')+'/.idesktop';
-  	GetLnk(LnkDir,'*.lnk');
+  	GetLnk(lsLnks,LnkDir,'*.lnk');
 	end;
 
 if(TabSheet3.Visible=true) then // Wenn About
@@ -304,6 +304,15 @@ if(TabSheet3.Visible=true) then // Wenn About
   	// Version Setzen
     lblVersion.Caption:='Version: ' + Version;
   end;
+
+if(TabSheet5.Visible=true) then // Wenn editieren
+	begin
+  	// Alte Einträge Löschen
+    lsKDEIcons.Clear;
+  	// Vorhandene KDE Verknüpfungen Auslesen
+  	LnkDir:=sysutils.GetEnvironmentVariable('HOME')+'/Desktop';
+  	GetLnk(lsKDEIcons,LnkDir,'*.desktop');
+	end;
 
 if(TabSheet4.Visible=true) then // Wenn Einstellungen
 	begin
@@ -315,7 +324,7 @@ if(TabSheet4.Visible=true) then // Wenn Einstellungen
 end;
 
 // Vorhandene Verknüpfungen Auslesen
-procedure TMain.GetLnk(const Directory: string;
+procedure TMain.GetLnk(list: tlistbox;const Directory: string;
 const FileMask: string = '*.*');
 
 //Hilfsfunktion, um Schrgstriche hinzuzfgen, wenn ntig
@@ -333,7 +342,7 @@ begin
     try
       repeat
       	// Anzeigen
-        lsLnks.Items.Add(SearchRec.Name)
+        list.Items.Add(SearchRec.Name)
       until FindNext(SearchRec) <> 0;
     finally
       SysUtils.FindClose(SearchRec);
@@ -443,7 +452,7 @@ if(MessageDlg('',Meldung.MSG3,mtconfirmation,[mbYes,mbNo],0)=mrYes) then
   // Liste Aktualisieren
   lsLnks.Clear; // Alte Daten Löschen
   // Vorhandene Verknüpfungen Auslesen
-  GetLnk(LnkDir,'*.lnk');
+  GetLnk(lsLnks,LnkDir,'*.lnk');
 end;
 
 procedure TMain.cmdAbortClick(Sender: TObject);
@@ -614,6 +623,13 @@ chkUpdateCheck.Caption:=_('Check for updates on startup');
 // Info
 fraInfo.Caption:=_('Info:');
 
+// Extras
+TabSheet5.Caption:=_('Extras');
+// KDE Desktop Verknüpfungen Konvertieren
+fraConvertKde.Caption:=_('Convert KDE Desktop links');
+// Start
+cmdConvertStart.Caption:=_('Start');
+
 // About
 TabSheet3.Caption:=_('About');
 // Veröffentlicht unter der GPL
@@ -734,7 +750,7 @@ if(MessageDlg('',Meldung.MSG3,mtConfirmation,[mbYes,mbNo],0)=mrYes) then
   // Liste Aktualisieren
   lsLnks.Clear; // Alte Daten Löschen
   // Vorhandene Verknüpfungen Auslesen
-  GetLnk(LnkDir,'*.lnk');
+  GetLnk(lsLnks,LnkDir,'*.lnk');
 end;
 
 procedure TMain.cmdIconEClick(Sender: TObject);

@@ -19,7 +19,7 @@ interface
 uses
   SysUtils, Types, Classes, Variants, QTypes, QGraphics, QControls, QForms, 
   QDialogs, QStdCtrls, QComCtrls, QButtons, QMenus, QExtCtrls, LinuxFormManager,
-  Functions;
+  Functions, fraiDeskConfig;
 
 type
   TMain = class(TForm)
@@ -101,6 +101,11 @@ type
     ConvertPopup: TPopupMenu;
     AlleMakieren1: TMenuItem;
     MarkierungUmkehren1: TMenuItem;
+    TabSheet6: TTabSheet;
+    lblFont: TLabel;
+    cboFont: TComboBox;
+    dlgFont: TFontDialog;
+    Button1: TButton;
     procedure cmdAddClick(Sender: TObject);
     procedure cmdDirClick(Sender: TObject);
     procedure cmdCreateClick(Sender: TObject);

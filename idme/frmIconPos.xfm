@@ -1,23 +1,22 @@
 object IconPos: TIconPos
-  Left = 285
-  Top = 219
-  Width = 534
-  Height = 368
-  HorzScrollBar.Range = 208
-  VertScrollBar.Range = 136
+  Left = 286
+  Top = 220
+  AutoScroll = False
   Caption = 'iDME - Icon Positionierung'
+  ClientHeight = 368
+  ClientWidth = 534
   Color = clBackground
+  Scaled = False
+  OnActivate = FormActivate
   OnClose = FormClose
-  OnCreate = FormCreate
   OnMouseMove = FormMouseMove
   PixelsPerInch = 75
-  TextHeight = 18
-  TextWidth = 5
   object imgIcon: TImage
-    Left = 160
-    Top = 88
+    Left = 240
+    Top = 144
     Width = 48
     Height = 48
+    IncrementalDisplay = True
     Picture.Data = {
       07544269746D61703A1B0000424D361B00000000000036000000280000003000
       0000300000000100180000000000001B0000120B0000120B0000000000000000
@@ -241,5 +240,13 @@ object IconPos: TIconPos
     Stretch = True
     Transparent = True
     OnMouseDown = imgIconMouseDown
+  end
+  object lsDummy: TListBox
+    Left = 504
+    Top = 344
+    Width = 33
+    Height = 25
+    TabOrder = 0
+    Visible = False
   end
 end

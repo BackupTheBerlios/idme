@@ -159,14 +159,14 @@ type
     procedure cmDotColorClick(Sender: TObject);
     procedure cmdPosClick(Sender: TObject);
   private
-    procedure GetLnk(list: tlistbox;const Directory: string;
-		const FileMask: string = '*.*');
     procedure SetCap();
     procedure CleanAdd();
     procedure CleanEdit();
     procedure ConvertKDELink(Link: String);
   public
-    { Public-Deklarationen }
+  	HomeDir: String;
+    procedure GetLnk(list: tlistbox;const Directory: string;
+		const FileMask: string = '*.*');
   end;
 
 // Meldungen
@@ -191,8 +191,8 @@ var
   Main: TMain;
   Version: String;
   Meldung: MSG;
-  HomeDir: String;
   rKDE: lnkTemp;
+  HomeDir: String;
 
 implementation
 
@@ -716,6 +716,11 @@ if(txtTitle.Text='') or (lsCommands.Items.Count=0) or (txtIcon.Text='') or
   cmdCreate.Enabled:=false // Erstellen verhindern
 else
 	cmdCreate.Enabled:=true; // Erstellen ermöglichen
+
+if(txtIcon.Text='') then
+	cmdPos.Enabled:=false
+else
+	cmdPos.Enabled:=true;
 end;
 
 procedure TMain.cmdSaveEClick(Sender: TObject);
@@ -1099,6 +1104,13 @@ end;
 
 procedure TMain.cmdPosClick(Sender: TObject);
 begin
+// IconPath Setzen
+IconPos.IconPath:=txtIcon.Text;
+
+// Icon X und Y
+IconPos.IconWidth:=strtoint(txtWidth.Text);
+IconPos.IconHeight:=strtoint(txtHeight.Text);
+
 // Icon Positionierung Anzeigen
 IconPos.ShowModal;
 end;

@@ -19,7 +19,7 @@ interface
 uses
   SysUtils, Types, Classes, Variants, QTypes, QGraphics, QControls, QForms, 
   QDialogs, QStdCtrls, QComCtrls, QButtons, QMenus, QExtCtrls, LinuxFormManager,
-  Functions, fraiDeskConfig;
+  Functions;
 
 type
   TMain = class(TForm)
@@ -112,16 +112,19 @@ type
     chkBold: TCheckBox;
     chkIconSnap: TCheckBox;
     chkCaptionOnHover: TCheckBox;
-    cboFont: TComboBox;
     txtFontColor: TEdit;
     txtTrans: TEdit;
     cmDotColor: TButton;
     shColor: TShape;
-    scTrans: TScrollBar;
     lblClickSpeed: TLabel;
     txtClickSpeed: TEdit;
-    scClickSpeed: TScrollBar;
     txtFontSize: TEdit;
+    dlgFont: TFontDialog;
+    txtFont: TEdit;
+    cmdDot2: TButton;
+    Button1: TButton;
+    Button2: TButton;
+    cmdPos: TButton;
     procedure cmdAddClick(Sender: TObject);
     procedure cmdDirClick(Sender: TObject);
     procedure cmdCreateClick(Sender: TObject);
@@ -154,8 +157,7 @@ type
     procedure MarkierungUmkehren1Click(Sender: TObject);
     procedure cmdDot2Click(Sender: TObject);
     procedure cmDotColorClick(Sender: TObject);
-    procedure scClickSpeedChange(Sender: TObject);
-    procedure scTransChange(Sender: TObject);
+    procedure cmdPosClick(Sender: TObject);
   private
     procedure GetLnk(list: tlistbox;const Directory: string;
 		const FileMask: string = '*.*');
@@ -194,7 +196,7 @@ var
 
 implementation
 
-uses frmAddCommand,frmGPL,gnugettext,frmEditCommand;
+uses frmAddCommand,frmGPL,gnugettext,frmEditCommand, frmIconPos;
 
 {$R *.xfm}
 
@@ -1071,7 +1073,13 @@ end;
 
 procedure TMain.cmdDot2Click(Sender: TObject);
 begin
-dlgColor.Execute;
+// Schriftart Auswahl
+if dlgFont.Execute then
+	begin
+  	// Werte Übernehmen
+    txtFont.Text:=dlgFont.Font.Name;
+    txtFontSize.Text:=inttostr(dlgFont.Font.Size);
+  end;
 end;
 
 procedure TMain.cmDotColorClick(Sender: TObject);
@@ -1089,16 +1097,10 @@ if dlgColor.Execute then
 	end;
 end;
 
-procedure TMain.scClickSpeedChange(Sender: TObject);
+procedure TMain.cmdPosClick(Sender: TObject);
 begin
-// Bei Änderung Wert Übernehmen
-txtClickSpeed.Text:=inttostr(scClickSpeed.Position);
-end;
-
-procedure TMain.scTransChange(Sender: TObject);
-begin
-// Bei Änderung Übernehmen
-txtTrans.Text:=inttostr(scTrans.Position);
+// Icon Positionierung Anzeigen
+IconPos.ShowModal;
 end;
 
 end.

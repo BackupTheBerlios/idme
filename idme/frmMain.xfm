@@ -599,6 +599,8 @@ object Main: TMain
           Top = 128
           Width = 361
           Height = 17
+          ShowCaption = True
+          Smooth = True
           Transparent = True
         end
         object lsKDEIcons: TListBox

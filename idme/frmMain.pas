@@ -18,7 +18,8 @@ interface
 
 uses
   SysUtils, Types, Classes, Variants, QTypes, QGraphics, QControls, QForms, 
-  QDialogs, QStdCtrls, QComCtrls, QButtons, QMenus, QExtCtrls, LinuxFormManager;
+  QDialogs, QStdCtrls, QComCtrls, QButtons, QMenus, QExtCtrls, LinuxFormManager,
+  Functions;
 
 type
   TMain = class(TForm)
@@ -337,6 +338,12 @@ if(TabSheet4.Visible=true) then // Wenn Einstellungen
     	txtiDeskDir.Enabled:=false
     else
     	txtiDeskDir.Enabled:=True;
+  end;
+
+if(TabSheet5.Visible=true) then // Wenn Extras
+	begin
+		StatusBar.Caption:='';
+    StatusBar.Position:=0;
   end;
 end;
 
@@ -931,14 +938,19 @@ begin
 if(lsKDEIcons.SelCount>0) and (MessageDlg('Sollen die Ausgew‰hlten Links konvertiert werden?',mtConfirmation,[mbYes,mbNo],0) = mrYes) then
 	begin
 		// Konvertierung Starten
-    for i:=0 to lsKDEIcons.SelCount -1 do
+    StatusBar.Position:=0;
+    StatusBar.Max:=lsKDEIcons.Items.Count;
+    for i:=0 to lsKDEIcons.Items.Count -1 do
     	begin
       	if lsKDEIcons.Selected[i] = true then
       		begin
           	StatusBar.Caption:='Konvertiere ' + lsKDEIcons.Items.Strings[i];
       			ConvertKDELink(HomeDir+'/Desktop/'+lsKDEIcons.Items.Strings[i]);
+            StatusBar.Position:=StatusBar.Position+1;
         		Application.ProcessMessages;
           end;
+      	// Fertig
+        StatusBar.Caption:='Konvertierung Abgeschlossen.';
       end;
   end;
 end;
@@ -948,35 +960,57 @@ procedure TMain.ConvertKDELink(Link: String);
 var
 	TempFile: Textfile;
   Line: String;
+  iDeskLnk: String;
+  Title: String;
 begin
 AssignFile(TempFile,Link);
 Reset(TempFile);
+// Datei Einlesen
   Try
     While Not EOF(TempFile) do // Bis das Ende erreicht ist
       begin
         // Auswerten
       	Readln(TempFile,Line); // Zeile Einlesen
         // Caption
-        if pos('Name',Line) <> 0 then // Wenn vorhanden
+        if lowercase(Functions.Left(Line,5)) = 'name=' then // Wenn vorhanden
            begin
-           	rKde.Caption:=Copy(Line,pos('name=',lowercase(Line))+5,length(Line));
-           	ShowMessage(rKde.Caption);
+           	rKde.Caption:=Functions.Mid(Line,pos('=',Line)+1,strlen(pchar(Line))-pos('=',Line));
            end;
         // Command
-        if pos('Exec',Line) <> 0 then // Wenn vorhanden
+        if lowercase(Functions.Left(Line,5)) = 'exec=' then // Wenn vorhanden
            begin
-           	rKde.Command:=Copy(Line,pos('exec=',lowercase(Line))+6,length(Line));
-           	ShowMessage(rKde.Command);
+           	rKde.Command:=Functions.Mid(Line,pos('=',Line)+1,strlen(pchar(Line))-pos('=',Line));
            end;
-        if pos('Icon',Line) <> 0 then // Wenn vorhanden
+        // Icon
+        if lowercase(Functions.Left(Line,5)) = 'icon=' then // Wenn vorhanden
            begin
-           	rKde.Icon:=Copy(Line,pos('icon=',lowercase(Line))+5,length(Line));
-           	ShowMessage(rKde.Icon);
+           	rKde.Icon:=Functions.Mid(Line,pos('=',Line)+1,strlen(pchar(Line))-pos('=',Line));
            end;
 			end;
   Finally
     CloseFile(TempFile);
   end;
+
+// Lnk Datei Schreiben
+Title:=rKde.Caption;
+iDeskLnk:='table Icon' + chr(10) +
+					'	Caption: ' + rKde.Caption + chr(10) +
+          ' Command: ' + rKde.Command + chr(10) +
+          ' Icon: ' + rKde.Icon + chr(10) +
+          ' SVG: false' + chr(10) +
+          ' X: 0' + chr(10) +
+          ' Y: 0' + chr(10) +
+          'end';
+	try
+		Title:=stringreplace(Title,' ','',[rfReplaceAll]);
+  	AssignFile(TempFile, HomeDir+'/.idesktop/'+'/'+Title+'.lnk'); // Datei bestimmen
+  	ReWrite(TempFile);
+  	Writeln(TempFile, iDeskLnk); // Schreiben
+  	Closefile(TempFile); // Datei Schlieﬂen
+	except
+		// Bei einem Fehler
+  	MessageDlg('',Meldung.MSG2,mtError,[mbOk],0);
+	end;
 end;
 
 // Alle Markieren

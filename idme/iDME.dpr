@@ -5,7 +5,8 @@ uses
   frmMain in 'frmMain.pas' {Main},
   frmAddCommand in 'frmAddCommand.pas' {AddCommand},
   frmGPL in 'frmGPL.pas' {GPL},
-  frmEditCommand in 'frmEditCommand.pas' {EditCommand};
+  frmEditCommand in 'frmEditCommand.pas' {EditCommand},
+  Functions in 'Functions.pas';
 
 {$R *.res}
 

@@ -152,11 +152,19 @@ type
   MSG6: String;
 end;
 
+type
+	lnkTemp = record
+  Caption: String;
+	Command: String;
+  Icon: String;
+end;
+
 var
   Main: TMain;
   Version: String;
   Meldung: MSG;
   HomeDir: String;
+  rKDE: lnkTemp;
 
 implementation
 
@@ -382,7 +390,7 @@ txtYE.Text:='';
 
 AssignFile(TempFile,iDeskLnk);
 Reset(TempFile);
-  Try 
+  Try
     While Not EOF(TempFile) do // Bis das Ende erreicht ist
       begin
       	Readln(TempFile,Line); // Zeile Einlesen
@@ -925,16 +933,50 @@ if(lsKDEIcons.SelCount>0) and (MessageDlg('Sollen die Ausgewählten Links konvert
 		// Konvertierung Starten
     for i:=0 to lsKDEIcons.SelCount -1 do
     	begin
-      	StatusBar.Caption:='Konvertiere ' + lsKDEIcons.Items.Strings[i];
-      	ConvertKDELink(lsKDEIcons.Items.Strings[i]);
-        Application.ProcessMessages;
+      	if lsKDEIcons.Selected[i] = true then
+      		begin
+          	StatusBar.Caption:='Konvertiere ' + lsKDEIcons.Items.Strings[i];
+      			ConvertKDELink(HomeDir+'/Desktop/'+lsKDEIcons.Items.Strings[i]);
+        		Application.ProcessMessages;
+          end;
       end;
   end;
 end;
 
+// Kde .desktop Link Konvertieren
 procedure TMain.ConvertKDELink(Link: String);
+var
+	TempFile: Textfile;
+  Line: String;
 begin
-// Konvertieren
+AssignFile(TempFile,Link);
+Reset(TempFile);
+  Try
+    While Not EOF(TempFile) do // Bis das Ende erreicht ist
+      begin
+        // Auswerten
+      	Readln(TempFile,Line); // Zeile Einlesen
+        // Caption
+        if pos('Name',Line) <> 0 then // Wenn vorhanden
+           begin
+           	rKde.Caption:=Copy(Line,pos('name=',lowercase(Line))+5,length(Line));
+           	ShowMessage(rKde.Caption);
+           end;
+        // Command
+        if pos('Exec',Line) <> 0 then // Wenn vorhanden
+           begin
+           	rKde.Command:=Copy(Line,pos('exec=',lowercase(Line))+6,length(Line));
+           	ShowMessage(rKde.Command);
+           end;
+        if pos('Icon',Line) <> 0 then // Wenn vorhanden
+           begin
+           	rKde.Icon:=Copy(Line,pos('icon=',lowercase(Line))+5,length(Line));
+           	ShowMessage(rKde.Icon);
+           end;
+			end;
+  Finally
+    CloseFile(TempFile);
+  end;
 end;
 
 // Alle Markieren
